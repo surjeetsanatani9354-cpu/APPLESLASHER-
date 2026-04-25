@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Apple Slasher Pro | One-Click Gift Codes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-deep: #0a0c15;
+            --bg-surface: #11161f;
+            --glass-card: rgba(30, 41, 59, 0.75);
+            --premium-gold-start: #fbbf24;
+            --premium-gold-end: #f59e0b;
+            --neon-green: #4ade80;
+            --neon-red: #ff4d4d;
+            --text-glow: 0 0 8px rgba(251, 191, 36, 0.6);
+            --border-glow: 0 0 12px rgba(251, 191, 36, 0.3);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #121826, #02040c);
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle at 20% 40%, rgba(251, 191, 36, 0.08) 2px, transparent 2px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #statusBanner {
+            background: linear-gradient(95deg, #dc2626, #b91c1c);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            max-width: 500px;
+            z-index: 2000;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+            border-bottom: 1px solid #ff8a8a;
+            display: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 18px 16px 90px 16px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .card {
+            background: rgba(18, 25, 45, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .btn-premium {
+            background: linear-gradient(105deg, #fbbf24, #f59e0b);
+            border: none;
+            padding: 16px 20px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #0c0a1a;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .btn-premium:active { transform: scale(0.97); }
+        .btn-premium:disabled {
+            background: #2d3a4e;
+            box-shadow: none;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            flex: 1;
+            margin: 0 6px;
+        }
+        .stat-box small { font-size: 11px; opacity: 0.7; letter-spacing: 0.5px; }
+        .stat-box div { font-weight: 800; font-size: 1.4rem; color: #fbbf24; text-shadow: 0 0 5px #ffb347; }
+
+        .game-area {
+            position: relative;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: crosshair;
+            margin: 15px 0;
+        }
+        .apple-container {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            transition: filter 0.1s;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
+        }
+        .apple-part {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-size: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.08s cubic-bezier(0.34, 1.2, 0.64, 1);
+            text-shadow: 0 5px 12px rgba(0,0,0,0.3);
+        }
+        .apple-left { clip-path: inset(0 50% 0 0); }
+        .apple-right { clip-path: inset(0 0 0 50%); }
+        .slicing .apple-left { transform: translateX(-28px) rotate(-12deg); }
+        .slicing .apple-right { transform: translateX(28px) rotate(12deg); }
+
+        .slash-line {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,210,1) 0%, rgba(255,215,0,0.9) 100%);
+            height: 6px;
+            width: 280px;
+            border-radius: 4px;
+            filter: blur(2px);
+            box-shadow: 0 0 18px #ffdd77;
+            pointer-events: none;
+            transform-origin: center;
+            animation: slashFlash 0.18s ease-out forwards;
+        }
+        @keyframes slashFlash {
+            0% { transform: scaleX(0) rotate(var(--angle)); opacity: 1; }
+            100% { transform: scaleX(1.2) rotate(var(--angle)); opacity: 0; }
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px; height: 10px;
+            background: radial-gradient(circle, #ffaa33, #ff4d4d);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: burstFly 0.45s ease-out forwards;
+        }
+        @keyframes burstFly {
+            to { transform: translate(var(--px), var(--py)) scale(0); opacity: 0; }
+        }
+
+        #liveCount {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(74,222,128,0.6);
+            letter-spacing: 2px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 460px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 6px;
+            border-radius: 60px;
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            box-shadow: 0 20px 35px -10px black;
+            z-index: 100;
+        }
+        .nav-item {
+            color: #7e8ba3;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex: 1;
+            cursor: pointer;
+            padding: 6px 0;
+            border-radius: 40px;
+            transition: 0.1s;
+        }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item.active { background: rgba(251, 191, 36, 0.2); color: #fbbf24; text-shadow: 0 0 3px gold; }
+
+        .prize-tag { font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 800; }
+        .tag-win { background: linear-gradient(145deg, #059669, #047857); color: white; box-shadow: 0 2px 6px #0a5c3e; }
+        .tag-lock { background: #1e293b; color: #94a3b8; border: 1px dashed #fbbf24; }
+
+        .leader-item {
+            background: rgba(15, 23, 42, 0.6);
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid #334155;
+            transition: 0.1s;
+        }
+        .m-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .m-table th { color: #fbbf24; font-weight: 700; font-size: 12px; padding-bottom: 6px; }
+        .m-table td { padding: 12px 4px; background: #0f172a80; border-radius: 18px; }
+
+        .logout-btn {
+            background: #dc2626;
+            border-radius: 20px;
+            border: none;
+            padding: 10px 30px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 9px 8px rgba(220,38,38,0.3);
+            float: right;
+        }
+        input {
+            background: #0c1220;
+            border: 1.5px solid #334155;
+            border-radius: 60px;
+            padding: 14px 18px;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus { border-color: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+
+        .get-pass-link {
+            display: inline-block;
+            background: #1e293b;
+            padding: 8px 18px;
+            border-radius: 40px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fbbf24;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .hidden { display: none; }
+        .active-milestone {
+            background: linear-gradient(115deg, #fbbf2410, #1e293b);
+            border-radius: 30px;
+            padding: 14px;
+            border-left: 4px solid #fbbf24;
+        }
+
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 #fbbf2470; } 100% { box-shadow: 0 0 0 8px transparent; } }
+        .btn-premium:active { animation: pulseGlow 0.2s; }
+
+        /* One-click gift copy style */
+        .gift-card {
+            background: linear-gradient(135deg, #065f46, #022c22);
+            border-radius: 2rem;
+            margin: 14px 0;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #fbbf24;
+            box-shadow: 0 6px 14px black;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s;
+        }
+        .gift-card:active {
+            transform: scale(0.98);
+            background: linear-gradient(135deg, #047857, #064e3b);
+        }
+        .code-block {
+            font-size: 22px;
+            font-family: monospace;
+            letter-spacing: 2px;
+            font-weight: bold;
+            background: #00000066;
+            border-radius: 18px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            user-select: all;
+            backdrop-filter: blur(4px);
+        }
+        .copy-toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #22c55e;
+            color: #020617;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 60px;
+            z-index: 3000;
+            font-size: 14px;
+            box-shadow: 0 4px 12px black;
+            animation: fadeToast 1.5s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes fadeToast {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+        }
+        .click-hint {
+            font-size: 11px;
+            background: #fbbf2420;
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="statusBanner"><i class="fas fa-skull-crosswalk"></i> SESSION LOCKED – COME BACK DURING OPEN HOURS </div>    
+
+<div id="loginPage" class="container">
+    <div class="card" style="margin-top: 60px; text-align: center;">
+        <div style="font-size: 64px;">🍎⚡</div>
+        <h2 style="background: linear-gradient(135deg, #FBBF24, #FFD966); -webkit-background-clip: text; background-clip: text; color: transparent;">APPLE SLASHER </h2>
+        <p style="color:#a0b3d9; margin: 10px 0;"> Compete, Earn Rewards</p>
+        <input type="password" id="passInput" placeholder="✦ ENTER PASSWORD ✦">
+        <button class="btn-premium" onclick="login()"><i class="fas fa-unlock-alt"></i> UNLOCK</button>
+        <a id="adminTgLink" href="#" target="_blank" class="get-pass-link"><i class="fab fa-telegram"></i>  GET  PASSWORD</a>
+    </div>
+</div>
+
+<div id="mainApp" class="container hidden">
+    <section id="sec-click" class="tab-content">
+        <div class="card" style="position: relative;">
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+            <p style="font-size: 10px; margin-top: 8px; text-align: right;"><i class="far fa-clock"></i> Session: <span id="openTimeText">--</span> - <span id="closeTimeText">--</span></p>
+            <h3 style="color:#FBBF24; text-align: center; letter-spacing: -0.5px;"><i class="fas fa-cut"></i> APPLE SLASHER</h3>
+            <div style="display: flex; justify-content: space-between; margin: 20px 0 10px;">
+                <div class="stat-box"><small>⚔️ YOUR ID</small><div id="myUID" style="font-size:13px;">--</div></div>
+                <div class="stat-box"><small>🏆 HIGH SCORE</small><div id="myBest">0</div></div>
+            </div>
+            <div class="game-area" id="gameArea">
+                <div id="liveCount">0</div>
+                <div class="apple-container" id="appleWrapper">
+                    <div class="apple-part apple-left">🍎</div>
+                    <div class="apple-part apple-right">🍎</div>
+                </div>
+            </div>
+            <p id="timerText" style="font-family: monospace; font-size: 1rem; font-weight: bold; text-align: center; background: #0a0f1a; display: inline-block; width: auto; margin: 12px auto; padding: 6px 14px; border-radius: 50px;"> READY </p>
+            <button id="gameBtn" class="btn-premium"><i class="fas fa-play"></i> START </button>
+        </div>
+    </section>
+
+    <section id="sec-milestone" class="tab-content hidden">
+        <div class="card">
+            <h3 style="color: #FBBF24;"><i class="fas fa-chart-line"></i>USER AND PRIZE </h3>
+            <div id="currentStatus" class="active-milestone" style="margin-bottom: 20px;">🏅 Loading milestones...</div>
+            <div style="overflow-x: auto;">
+                <table class="m-table">
+                    <thead><tr><th>👥 TARGET USERS 🎯</th><th>🏅 WINNERS 🏆</th><th>💰 REWARD (₹)</th></tr>
+                    </thead>
+                    <tbody id="milestoneBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="sec-leader" class="tab-content hidden">
+        <div class="card">
+            <h3 style="color:#FBBF24; text-align: center;">🌍 GLOBAL RANKINGS</h3>
+            <div style="background:#111b29; display: inline-block; width: auto; margin: 10px auto; padding: 6px 16px; border-radius: 50px;">
+                <i class="fas fa-users"></i> Total Users: <span id="totalUserCount" style="font-weight:800;">0</span>
+            </div>
+            <div id="leaderList" style="max-height: 430px; overflow-y: auto; margin-top: 8px;"></div>
+        </div>
+    </section>
+
+    <section id="sec-gift" class="tab-content hidden">
+        <div class="card">
+            <h3 style="color:#4ADE80;"><i class="fas fa-gift"></i> MY REWARDS</h3>
+            <p style="font-size: 11px; opacity: 0.7;"><i class="fas fa-mouse-pointer"></i> One‑click any gift card → instantly copy code</p>
+            <div id="giftContainer"></div>
+        </div>
+    </section>
+</div>
+
+<nav class="bottom-nav hidden" id="bottomNav">
+    <div class="nav-item active" onclick="showTab('sec-click', this)"><i class="fas fa-gamepad"></i>Play</div>
+    <div class="nav-item" onclick="showTab('sec-milestone', this)"><i class="fas fa-bullseye"></i>Roadmap</div>
+    <div class="nav-item" onclick="showTab('sec-leader', this)"><i class="fas fa-trophy"></i>Ranks</div>
+    <div class="nav-item" onclick="showTab('sec-gift', this)"><i class="fas fa-wallet"></i>Gifts</div>
+</nav>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, get, remove, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDnM9ry5JreqjRXqQVUSiaBzudXuaAF-QI",
+        databaseURL: "https://send-message-b178e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    const MY_ID = localStorage.getItem("permanentUID") || "SLASHER_" + Math.floor(1 + Math.random() * 9000000000);
+    localStorage.setItem("permanentUID", MY_ID);
+
+    let ADMIN_SETTINGS = { gameDuration: 15, showLimit: 200, winAmount: 10, milestones: {100:{wins:10,price:50},250:{wins:20,price:150},500:{wins:40,price:300}}, openTime: "00:00", closeTime: "23:59" };
+    let clicks = 0, isPlaying = false;
+
+    onValue(ref(db, 'settings'), (snap) => {
+        const data = snap.val() || {};
+        ADMIN_SETTINGS = {...ADMIN_SETTINGS, ...data};
+        document.getElementById('openTimeText').innerText = data.openTime || "00:00";
+        document.getElementById('closeTimeText').innerText = data.closeTime || "23:59";
+        if(document.getElementById('adminTgLink')) document.getElementById('adminTgLink').href = data.tgLink || "#";
+        if(data.forceLogoutKey && data.forceLogoutKey != localStorage.getItem("lastLogoutKey")) {
+            localStorage.setItem("lastLogoutKey", data.forceLogoutKey);
+            logout();
+        }
+        checkAppStatus();
+    });
+
+    if(localStorage.getItem("isLoggedIn") === "true") {
+        onValue(ref(db, `forceLogout/${MY_ID}`), (snap) => {
+            if(snap.val() === true) { remove(ref(db, `forceLogout/${MY_ID}`)); logout(); }
+        });
+    }
+
+    // Show floating toast message
+    function showCopyToast(message = "✅ Gift code copied!") {
+        const existing = document.querySelector('.copy-toast');
+        if(existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast';
+        toast.innerHTML = `<i class="fas fa-copy"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 1500);
+    }
+
+    // ONE-CLICK COPY: Attach to gift container with event delegation
+    function attachOneClickCopyToGifts() {
+        const container = document.getElementById('giftContainer');
+        if(!container) return;
+        // Remove old listeners to avoid dupes, but we use event listener on container
+        container.removeEventListener('click', handleGiftClick);
+        container.addEventListener('click', handleGiftClick);
+    }
+
+    async function handleGiftClick(e) {
+        // find the closest .gift-card element
+        let targetCard = e.target.closest('.gift-card');
+        if(!targetCard) return;
+        const codeElem = targetCard.querySelector('.copy-code-text');
+        if(!codeElem) return;
+        const code = codeElem.getAttribute('data-code') || codeElem.innerText.trim();
+        if(code) {
+            try {
+                await navigator.clipboard.writeText(code);
+                showCopyToast(`🎁 "${code}" copied!`);
+                // mini visual feedback: pulse effect
+                targetCard.style.transform = 'scale(0.98)';
+                setTimeout(() => { if(targetCard) targetCard.style.transform = ''; }, 120);
+            } catch(err) {
+                // fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showCopyToast(`📋 Copied: ${code}`);
+            }
+        }
+    }
+
+    const gameArea = document.getElementById('gameArea');
+    const appleWrapper = document.getElementById('appleWrapper');
+    const gameBtn = document.getElementById('gameBtn');
+
+    function createParticles(x, y) {
+        for(let i=0;i<12;i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 20 + Math.random() * 40;
+            const px = Math.cos(angle) * dist;
+            const py = Math.sin(angle) * dist;
+            p.style.setProperty('--px', px + 'px');
+            p.style.setProperty('--py', py + 'px');
+            p.style.left = (x - 6) + 'px';
+            p.style.top = (y - 6) + 'px';
+            gameArea.appendChild(p);
+            setTimeout(() => p.remove(), 450);
+        }
+    }
+
+    gameArea.addEventListener('click', (e) => {
+        if (!isPlaying) return;
+        clicks++;
+        document.getElementById('liveCount').innerText = clicks;
+        const rect = gameArea.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+        const angle = Math.random() * 360;
+        const slash = document.createElement('div');
+        slash.className = 'slash-line';
+        slash.style.setProperty('--angle', `${angle}deg`);
+        slash.style.left = `${clickX - 130}px`;
+        slash.style.top = `${clickY - 3}px`;
+        gameArea.appendChild(slash);
+        setTimeout(() => slash.remove(), 180);
+        appleWrapper.classList.add('slicing');
+        createParticles(clickX, clickY);
+        setTimeout(() => appleWrapper.classList.remove('slicing'), 100);
+    });
+
+    gameBtn.onclick = () => {
+        if (isPlaying) return;
+        isPlaying = true; clicks = 0;
+        document.getElementById('liveCount').innerText = "0";
+        let time = ADMIN_SETTINGS.gameDuration || 15;
+        gameBtn.disabled = true;
+        gameBtn.innerHTML = '<i class="fas fa-fist-raised"></i> SLASH FAST!';
+        const timerInterval = setInterval(() => {
+            time--;
+            document.getElementById('timerText').innerHTML = `⏱️ ${time}s LEFT ⏱️`;
+            if(time <= 0) {
+                clearInterval(timerInterval);
+                isPlaying = false;
+                saveScore();
+            }
+        }, 1000);
+    };
+
+    async function saveScore() {
+        const scoreRef = ref(db, `leaderboard/${MY_ID}`);
+        const logRef = ref(db, `userLogs/${MY_ID}`);
+        const snap = await get(scoreRef);
+        const best = (snap.val() && snap.val().score) ? snap.val().score : 0;
+        if (clicks > best) await set(scoreRef, { uid: MY_ID, score: clicks });
+        await set(logRef, { uid: MY_ID, score: clicks, duration: ADMIN_SETTINGS.gameDuration, timestamp: new Date().toLocaleTimeString(), device: navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop" });
+        gameBtn.disabled = false;
+        gameBtn.innerHTML = '<i class="fas fa-redo-alt"></i> PLAY AGAIN';
+        checkAppStatus();
+    }
+
+    function updateMilestonesUI(userCount) {
+        const ms = ADMIN_SETTINGS.milestones || {};
+        const body = document.getElementById('milestoneBody');
+        body.innerHTML = '';
+        let currentUnlocked = 0;
+        Object.keys(ms).sort((a,b)=>Number(a)-Number(b)).forEach(target => {
+            const reached = userCount >= parseInt(target);
+            if(reached) currentUnlocked = ms[target].wins;
+            body.innerHTML += `<tr style="background:${reached ? '#0f2b1f30' : 'transparent'};">
+                <td style="font-weight:bold;"> ${target} users ${reached ? '✅️' : ''} </td>
+                <td> ${ms[target].wins} winners </td>
+                <td> ₹${ms[target].price} </td>
+            </tr>`;
+        });
+        document.getElementById('currentStatus').innerHTML = `<i class="fas fa-crown"></i> ${currentUnlocked} Winners  Unlocked <i class="fas fa-gem"></i>`;
+        return currentUnlocked;
+    }
+
+    function initDataSync() {
+        onValue(ref(db, 'leaderboard'), (snap) => {
+            const data = snap.val() || {};
+            const users = Object.values(data).sort((a,b) => b.score - a.score);
+            document.getElementById('totalUserCount').innerText = users.length;
+            const winnersLimit = updateMilestonesUI(users.length);
+            const listDiv = document.getElementById('leaderList');
+            listDiv.innerHTML = '';
+            users.slice(0, ADMIN_SETTINGS.showLimit || 200).forEach((u, idx) => {
+                const rank = idx+1;
+                const isWinner = rank <= winnersLimit;
+                const highlight = u.uid === MY_ID ? 'style="background: linear-gradient(95deg,#fbbf2420,#2a1e0a); border-left:4px solid #fbbf24;"' : '';
+                listDiv.innerHTML += `<div class="leader-item" ${highlight}>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><strong>#${rank}</strong> ${u.uid === MY_ID ? '🔥 YOU' : u.uid.slice(0,12)} </span>
+                        <span><span class="prize-tag ${isWinner ? 'tag-win' : 'tag-lock'}">${isWinner ? '₹'+ADMIN_SETTINGS.winAmount : 'locked'}</span> <span style="color:#4ade80; font-weight:800;">${u.score}</span></span>
+                    </div>
+                </div>`;
+                if(u.uid === MY_ID) document.getElementById('myBest').innerText = u.score;
+            });
+        });
+
+        onValue(ref(db, `gifts/${MY_ID}`), (snap) => {
+            const gifts = snap.val();
+            const container = document.getElementById('giftContainer');
+            if(!gifts || Object.keys(gifts).length === 0) { 
+                container.innerHTML = "<div style='padding:24px; text-align:center; background:#0a0f1e; border-radius:30px;'><i class='fas fa-inbox'></i> No rewards yet.<br><small>Win rank prizes after session ends</small></div>"; 
+                return; 
+            }
+            container.innerHTML = Object.values(gifts).map(g => `
+                <div class="gift-card" data-code="${g.code}">
+                    <i class="fas fa-ticket-alt" style="font-size: 26px;"></i>
+                    <div style="font-size: 12px; opacity:0.9;">🎁 REWARD ₹${g.amount}</div>
+                    <div class="code-block">
+                        <span class="copy-code-text" data-code="${g.code}" style="cursor:pointer; letter-spacing:1px;">${g.code}</span>
+                        <i class="fas fa-copy" style="font-size: 18px; opacity:0.8;"></i>
+                    </div>
+                    <div class="click-hint"><i class="fas fa-mouse-pointer"></i> Click anywhere on card → copy code</div>
+                </div>
+            `).join('');
+            // Attach one-click copy handler each time gifts are rendered
+            attachOneClickCopyToGifts();
+        });
+    }
+
+    function checkAppStatus() {
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+        const closed = timeStr < ADMIN_SETTINGS.openTime || timeStr > ADMIN_SETTINGS.closeTime;
+        document.getElementById('statusBanner').style.display = closed ? 'flex' : 'none';
+        if(closed && gameBtn) { gameBtn.disabled = true; gameBtn.innerHTML = '<i class="fas fa-ban"></i> SESSION CLOSED'; }
+        else if(gameBtn && !isPlaying) { gameBtn.disabled = false; gameBtn.innerHTML = '<i class="fas fa-play"></i> START GAME'; }
+    }
+
+    window.login = async () => {
+        const pass = document.getElementById('passInput').value.trim();
+        const snap = await get(ref(db, 'allPasswords'));
+        let valid = false;
+        if(snap.val()) {
+            for(let k in snap.val()) if(snap.val()[k].code === pass) { await remove(ref(db, `allPasswords/${k}`)); valid = true; break; }
+        }
+        if(valid) { localStorage.setItem("isLoggedIn", "true"); location.reload(); } else alert("❌ Invalid Password! Join Telegram to get Access.");
+    };
+    window.logout = () => { localStorage.removeItem("isLoggedIn"); location.reload(); };
+    window.showTab = (id, el) => {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+    };
+
+    if(localStorage.getItem("isLoggedIn") === "true") {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        document.getElementById('bottomNav').classList.remove('hidden');
+        document.getElementById('myUID').innerText = MY_ID;
+        initDataSync();
+        setInterval(checkAppStatus, 3000);
+    }
+</script>
+</body>
+  </html>
